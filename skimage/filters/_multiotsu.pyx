@@ -52,13 +52,13 @@ def _get_multiotsu_thresh_indices_lut(cnp.float32_t [::1] prob,
     with nogil:
         _set_var_btwcls_lut(prob, nbins, var_btwcls, zeroth_moment,
                             first_moment)
-        _set_thresh_indices_lut(var_btwcls, hist_idx=0,
+        max_sigma = _set_thresh_indices_lut(var_btwcls, hist_idx=0,
                                 thresh_idx=0, nbins=nbins,
                                 thresh_count=thresh_count, sigma_max=0,
                                 current_indices=current_indices,
                                 thresh_indices=thresh_indices)
 
-    return py_thresh_indices
+    return py_thresh_indices, max_sigma
 
 
 cdef void _set_var_btwcls_lut(cnp.float32_t [::1] prob,
@@ -270,13 +270,13 @@ def _get_multiotsu_thresh_indices(cnp.float32_t [::1] prob,
 
     with nogil:
         _set_moments_lut_first_row(prob, nbins, zeroth_moment, first_moment)
-        _set_thresh_indices(zeroth_moment, first_moment, hist_idx=0,
+        max_sigma = _set_thresh_indices(zeroth_moment, first_moment, hist_idx=0,
                             thresh_idx=0, nbins=nbins,
                             thresh_count=thresh_count, sigma_max=0,
                             current_indices=current_indices,
                             thresh_indices=thresh_indices)
 
-    return py_thresh_indices
+    return py_thresh_indices, max_sigma
 
 
 cdef void _set_moments_lut_first_row(cnp.float32_t [::1] prob,
